@@ -1,7 +1,7 @@
 function Space(size) {
   this.size = size;
 
-  this.tiles = [];
+  this.rooms = [];
 
   this.initializeRooms = function() {
     for (i=0; i < this.size; ++i){
