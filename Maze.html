@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html> 
+  
+  <head> 
+    <title>Maze Runner</title>
+    
+		<meta charset ="utf-8" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" type="text/css" href="Appearance.css">
+	</head>
+
+	<table class="hideElements">
+		<tr id="shopTrToClone" class="itemTr" >
+			<td class='itemKey hideElements'>
+
+			</td>
+			<td>
+				<img class="itemImage" src="" style="width:50px; height:50px;" data-toggle="tooltip" data-placement="bottom" data-html="true" title="">
+			</td>
+			<td class="itemQuantity">
+				
+			</td>	
+			<td class="itemBuy">
+				<input type="text" class="inputAmount" value="1" name="Buy amount"/>
+				<input type="button" class="submitAction" name="Buy" onclick="buyThis(this)"/>
+			</td>
+			<td class="itemSell">
+				<input type="text" class="inputAmount" value="1" name="Sell amount"/>
+				<input type="button" class="submitAction" name="Sell" onclick="sellThis(this)"/>
+			</td>
+			<td class="itemPlayerQuantity">
+
+			</td>
+		</tr>
+	</table>
+	<div class="hideElements">
+		<div id="cardToClone" class="card">
+			<div class="card-header">
+				<h5 class="card-title itemName"></h5>
+			</div>
+			<div class="card-body">
+				<p class="card-text itemDescription"></p>
+			</div>
+		</div>
+	</div>
+	
+  <body id="bodyId">
+	<div class="container">
+		<div class="row full-width">
+			<div id="MainMenu" class="toggleShow mainMenu">
+				<h1>Maze Runner</h1>
+				<input id="StartGame" type="button" value="Start" onclick="toggleHideAndSelectGame()"/>
+				<!--<input id="showOptions" type="button" value="Options" onclick="toggleHidden(['MainMenu'],['optionsId'])"/>-->
+				<input id="showInstructions" type="button" value="Instructions" onclick="toggleHidden(['MainMenu'],['instructionsId'])"/>
+				<input id="resetLocalStorage" type="button" value="Reset saved data" onclick="resetLocalStorage()"/>
+			</div>
+			<div id="ChooseGame" class="toggleHide">
+				<input id="game1" class="chooseGame" gameId='null' type="button" value="New Game" onclick="toggleHideAndStartGame(this)"/>
+				<input id="game2" class="chooseGame" gameId='null' type="button" value="New Game" onclick="toggleHideAndStartGame(this)"/>
+				<input id="game3" class="chooseGame" gameId='null' type="button" value="New Game" onclick="toggleHideAndStartGame(this)"/>
+			</div>
+			<div id="playerInfo" class="toggleHide col">
+					<h2>Player info</h2>					
+					<span>Endurance</span>	
+					<div class="progress">
+							<div name="endurance" class="prgress-bar bg-info updatableInfo " role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+							</div>
+							<div class="col-4 mx-auto" style="position:absolute; left:50%">
+									<div style="position:relative;left:-50%">
+										<span class="currentValue"></span>
+										<span>/</span>
+										<span class="maxValue"></span>
+									</div>
+								</div>
+					</div>
+					<span>Health</span>	
+					<div class="progress">
+							<div name="health" class="prgress-bar bg-info updatableInfo " role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+							</div>
+							<div class="col-4 mx-auto" style="position:absolute; left:50%">
+								<div style="position:relative;left:-50%">
+									<span class="currentValue"></span>
+									<span>/</span>
+									<span class="maxValue"></span>
+								</div>
+							</div>
+					</div>
+					<div>
+						<span>Gold : </span>
+						<span id="goldAmount"></span>
+					</div>
+					<div>
+						<span>Active Item: </span>
+						<input id="leftArrow" class="chooseGame" type="button" value="&#x25C0;" onclick="previousActiveItem()"/>
+						<img id="activeItem" class="toggleHide" src="" style="width:50px; height:50px;cursor:pointer;" onclick="useItem(this)" data-toggle="tooltip" data-placement="bottom" data-html="true" title="">
+						<span id="activeItemAmount">x1</span>
+						<input id="rightArrow" class="chooseGame" type="button" value="&#x25B6;" onclick="nextActiveItem()"/>
+					</div>
+				</div>
+
+			<div id="Village" class="toggleHide col">
+				<input id="newGameId" type="button" value="Enter the Maze!" onclick="toggleHiddenAndStartMaze();" />
+				<!--<input id="showSmithy" type="button" value="Smithy" onclick="toggleHiddenAndShowShop()"/>-->
+				<input id="showShop" type="button" value="Shop" onclick="toggleHiddenAndShowShop()"/>
+			</div>
+			<div id="shopTable" class="toggleHide shop">
+				<h1>Shop</h1>
+				<table >
+					<tr class="shopHead">
+							<th>
+								Item
+							</th>
+							<th>
+								Quantity in stock
+							</th>
+							<th>
+								Buy	
+							</th>
+							<th>
+								Sell
+							</th>
+							<th>
+								Player inventory
+							</th>
+					</tr>
+					<tr>
+						<td colspan="2">
+							Merchant Gold :
+						</td>
+						<td colspan="3" id="merchantGold">
+							
+						</td>
+					</tr>
+					<tr>
+							<td colspan="2">
+								Player Gold :
+							</td>
+							<td colspan="3" id="playerGold">
+			
+							</td>
+						</tr>
+				</table>
+				<input class="mainMenuButton" type="button" value="Main Menu" onclick="toggleHidden(['shopTable'],['Village']);saveGame()"/>
+			</div>
+			
+			<div id="instructionsId" class="toggleHide instructions">
+				<h1>
+					Instructions
+				</h1>
+				<p>
+					Movement : use the directional arrows
+				</p>
+				<ul>
+					<li>
+						'E' : Use the selected activatable item
+					</li>
+					<li>
+						'Z' : Cycle to the next activatable item in the inventory
+					</li>
+					<li>
+						'Spacebar' : Use the activatable entity
+					</li>
+				</ul>
+				<p>	
+					Objectives : 
+				</p>
+				<ul>
+					<li>
+						Get to the end without getting torn apart by the wandering monsters
+					</li>
+					<li>
+						Gather items and grow stronger but beware : grow not arrogant for danger lurks around every corner
+					</li>
+					<li>	
+						Gather gold to buy items at the shop, available between maze runs.
+					</li>	
+				</p>
+				<input class="mainMenuButton" type="button" value="Main Menu" onclick="toggleHidden(['instructionsId'],['MainMenu']);"/>
+			</div>
+			
+			<div id="optionsId" class="toggleHide">
+				<div class='options'>
+				<h1>
+					Options
+				</h1>
+					<table>
+						<tr>
+							<td>
+								<label>Player speed : </label>
+							</td>
+							<td>
+								<select id="playerSpeedSelect">
+									<option selected="selected" value="2">Slow</option>
+									<option value="5">Normal</option>
+									<option value="7">Fast</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>Game difficulty : </label>
+							</td>
+							<td>
+								<select id="gameDifficultySelect">
+									<option selected="selected" value="9">Easy</option>
+									<option value="5">Normal</option>
+									<option value="3">Hard</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<label>Game Length : </label>
+							</td>
+							<td>
+								<select id="gameLengthSelect">
+										<!--<option selected="selected" value="8">Short</option>-->
+									<option selected="selected" value="16">Short</option>
+									<option value="30">Normal</option>
+									<option value="40">Long</option>
+									<option value="50">Extensive</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+					<div>
+						<label>Longer game lengths mean longer loading times</label>
+					</div>
+					<div>
+						<label>Extensive game lengths are not recommended on smaller Game Areas</label>
+					</div>
+					<input class="mainMenuButton" type="button" value="Main Menu" onclick="toggleHidden(['optionsId'],['Village']);"/>
+				</div>
+			</div>
+			
+			<div id="GameScreen" class="toggleHide col">
+					<input id="showShopGameScreen" class="centered" type="button" value="Go back to town" onclick="checkReturnToTown()"/>
+			</div>
+			<div class="col">
+				<textarea readonly id="playerConsoleId" class="toggleHide playerConsole"></textarea>
+			</div>
+		</div>
+	</div>
+	
+
+	</body>
+		<script src="Toolbox/Utils.js"></script>
+		<script src="Data/Items/Equipement.js"></script>
+		<script src="Data/Items/Weapon.js"></script>
+		<script src="Data/Characters/Attribut.js"></script>
+		<script src="Data/MazeElements/PassiveEntity.js"></script>
+		<script src="Data/MazeElements/Trap.js"></script>
+		<script src="Visual/Images.js"></script>
+		<script src="Data/Items/Item.js"></script>
+		<script src="Data/General/Dialogue.js"></script>
+		<script src="Data/Characters/Modifier.js"></script>
+		<script src="DataTransformation/ShopActions.js"></script>
+		<script src="Visual/VisualTools.js"></script>
+		<script src="Data/General/ElementMaps.js"></script>
+		<script src="Data/VillageElements/Stock.js"></script>
+		<script src="Data/VillageElements/Shop.js"></script>
+		<script src="Data/MazeElements/ActivatableEntity.js"></script>
+		<script src="Data/General/PlayerConsole.js"></script>
+		<script src="Data/General/GameState.js"></script>
+		<script src="Data/MazeElements/Treasure.js"></script>
+		<script src="DataTransformation/Actions.js"></script>
+		<script src="Maze/Maze.js"></script>
+		<script src="Data/Characters/Character.js"></script>
+		<script src="Maze/MazeMaker.js"></script>
+		<script src="Maze/Room.js"></script>
+		<script src="Data/General/gameTimer.js"></script>
+		<script src="Visual/Canvas.js"></script>
+		<script src="DataTransformation/Events.js"></script>
+		<script src="Maze/MazeRunner.js"></script>
+		<script>
+			/*loadGames()
+			store(game)*/
+		</script>
+</html>
